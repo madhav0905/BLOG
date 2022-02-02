@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>See Post</title>
+<%- include("./partials/heading") %>
+<body>
+    <%- include("./partials/nav")%>
+    <div class="container is-widescreen">
+      
+      
+    
+      <div class="notification is-warning has-shadow">
+          
+          <p class="title"><%= output.posttitle %></p>
+          <p class="control has-icons-left has-icons-right is-pulled-right">
+        
+        
+                <% if(liked) {%>
+                  <div class="field is-pulled-right">
+                    <form action="/logged/posts/liked/<%= output._id %>" method="post">
+                  <input type="hidden"  name="liked" value=0>
+            <button class="button is-primary "  id="like" > Liked<span class="icon is-small is-left " style="margin-left: 1%;">
+              <i class="fa fa-thumbs-up"></i>
+            </span>
+            </button>
+            </form>
+            </div>
+            <% } else{%>
+              <div class="field is-pulled-right">
+                <form action="/logged/posts/liked/<%= output._id %>" method="post">
+                  <input type="hidden"  name="liked" value=1>
+              <button class="button  has-light" value=1 id="like" > Like<span class="icon is-small is-left " style="margin-left: 1%;">
+                <i class="fa fa-thumbs-up"></i>
+              </span>
+              </button>
+            </form>
+          </div>
+              <% } %>
+          
+          
+          </p>
+          <p class="subtitle"><a href="/logged/user/<%= output.post_create.username %>">Author : <%= output.post_create.username %></a></p>
+      <p><%= output.tags %></p>
+      <br>
+      <div class="box has-shadow">
+          <   p><%= output.post_body %></p>
+
+
+
+      </div>
+
+
+      <p class="title m-0 p-0" style="border: 1px solid black;">Comments:</p>
+      <%output.commentedby.forEach(out=> {  %>
+      <section class="section is-small " style="border: 1px solid black; padding: 0;">
+        <p  style=" margin: 0;"><%= out.user_commented.username %></p>
+      <p ><%= out.text %></p>
+    </section>
+      <% }); %>
+    
+      <p>Add Comment:</p>
+<div class="field m-2">
+  <label class="label">Content:</label>
+  <p class="control has-icons-left has-icons-right">
+    <textarea class="is-italic" required name="post_body" rows="5" cols="50" style="margin-left: 80px;">
+
+    </textarea>
+    <span class="icon is-small is-left">
+      <i class="fa fa-pen"></i>
+    </span>
+    
+  </p>
+</div>
+<div class="field has-text-centered mb-2">
+  <button class="button is-success ">
+   Comment
+   </button>
+
+
+  </div>
+      </div>
+    
+  </div>
+
+
+<script>
+  function myFunction(id) {
+    console.log(id);
+  var element = document.getElementById(id);
+
+
+    element.classList.toggle("is-primary");
+  }
+  
+
+</script>
+<style>
+  #searchandinput
+{display: none;
+}
+</style>
+</body>
+</head>
+</html>

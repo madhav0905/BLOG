@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <%- include("./partials/heading") %>
+<body>
+    <%- include("./partials/nav")%>
+    <div class="hero">
+        <div class="columns">
+            <div class="column"> 
+                <form action="" class="box">
+                    <div class="field m-2">
+                        <label class="label">Post Title:</label>
+                        <p class="control has-icons-left has-icons-right">
+                          <input class="input" type="text" placeholder="Title of Post..." name="posttitle" required>
+                          <span class="icon is-small is-left">
+                            <i class="fa fa-envelope"></i>
+                          </span>
+                          
+                        </p>
+                    </div>
+                    <div class="field m-2">
+                        <label class="label">Tags:</label>
+                        <p class="control has-icons-left has-icons-right">
+                          <input class="input" type="text" placeholder="write tags space by space" name="tags" required>
+                          <span class="icon is-small is-left">
+                            <i class="fa fa-heading"></i>
+                          </span>
+                          
+                        </p>
+                    </div>
+                    <div class="field m-2">
+                        <label class="label">Content:</label>
+                        <p class="control has-icons-left has-icons-right">
+                          <textarea class="is-italic" required name="post_body" rows="10" cols="150" style="margin-left: 80px;">
+
+                          </textarea>
+                          <span class="icon is-small is-left">
+                            <i class="fa fa-pen"></i>
+                          </span>
+                          
+                        </p>
+                    </div>
+                    <div class="field has-text-centered mb-2">
+                        <button class="button is-success ">
+                         Post
+                         </button>
+                    
+       
+                     </div>
+       
+                    </form>
+            </div>
+        </div>
+    </div>
+   
+
+
+
+
+
+
+
+
+
+
+
+    
+</div>
+<style>
+#searchandinput
+{display: none;
+}
+
+
+</style>
+</body>
+</html>
