@@ -8,7 +8,7 @@
     <div class="hero">
         <div class="columns">
             <div class="column"> 
-                <form action="" class="box">
+                <form action="/logged/create/new" class="box" method="post">
                     <div class="field m-2">
                         <label class="label">Post Title:</label>
                         <p class="control has-icons-left has-icons-right">
@@ -22,9 +22,9 @@
                     <div class="field m-2">
                         <label class="label">Tags:</label>
                         <p class="control has-icons-left has-icons-right">
-                          <input class="input" type="text" placeholder="write tags space by space" name="tags" required>
+                          <input class="input" type="text" placeholder="write words space by space for multiple tags" name="tags" required>
                           <span class="icon is-small is-left">
-                            <i class="fa fa-heading"></i>
+                            <i class="fa fa-tags"></i>
                           </span>
                           
                         </p>
@@ -32,9 +32,10 @@
                     <div class="field m-2">
                         <label class="label">Content:</label>
                         <p class="control has-icons-left has-icons-right">
-                          <textarea class="is-italic" required name="post_body" rows="10" cols="150" style="margin-left: 80px;">
+                                                  <textarea class="is-italic container" required name="post_body" rows="5" style="margin-left: 10%; min-width: 80%;min-height: 30% ; max-height:50% ; resize: none;">
 
                           </textarea>
+                    
                           <span class="icon is-small is-left">
                             <i class="fa fa-pen"></i>
                           </span>

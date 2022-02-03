@@ -10,6 +10,7 @@ const mongoose=require('mongoose');
 const {User,Post,Comment}=require("../Schemas/models");
 const validate=require("../Schemas/validate");
 const validatelogin=require("../Schemas/validatelogin");
+const validatepost=require("../Schemas/validate_post");
 const auth=require("../middleware/auth");
 require('dotenv').config();
 route.get('/explore',auth,async(req,res)=>
@@ -172,8 +173,20 @@ route.get("/user/:userid",async (req,res)=>
 }
 
 
-)
+);
+route.post("/create/new",[auth,urlencoded],(req,res)=>
+{
 
+}
+
+
+
+
+
+
+
+
+)
 
 
 

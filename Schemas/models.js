@@ -122,7 +122,7 @@ const postschema=new mongoose.Schema(
         likedby:[{type:mongoose.Schema.Types.ObjectId,default:[],ref:"user"}],
         likes:{type:'Number' ,default:0},
         commentedby:[{type:mongoose.Schema.Types.ObjectId,default:[],ref:"comment"}],
-    
+        date:{type:Date,default:Date.now}
     }
     
     );
