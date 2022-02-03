@@ -3,6 +3,7 @@ const app=express();
 const path=require('path');
 const mongoose=require('mongoose');
 require('dotenv').config();
+const moment=require('moment');
 mongoose.connect(process.env.mongo_url)
         .then(() => console.log('Connecteed to mongodb'))
         .catch((err) => console.log(err));  
@@ -122,9 +123,10 @@ const postschema=new mongoose.Schema(
         likedby:[{type:mongoose.Schema.Types.ObjectId,default:[],ref:"user"}],
         likes:{type:'Number' ,default:0},
         commentedby:[{type:mongoose.Schema.Types.ObjectId,default:[],ref:"comment"}],
-        date:{type:Date,default:Date.now}
+        date:{type:String,default: ()=>moment().format('MMMM Do YYYY, h:mm:ss a')
+           
     }
-    
+}
     );
     const Post=mongoose.model('post',postschema);
     const Comment=mongoose.model('comment',commentschema);

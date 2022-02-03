@@ -40,7 +40,12 @@
           
           </p>
           <p class="subtitle"><a href="/logged/user/<%= output.post_create.username %>">Author : <%= output.post_create.username %></a></p>
-      <p><%= output.tags %></p>
+      <p><% output.tags.forEach(tag=>{%>
+
+        <%= tag  %>
+
+        
+          <% } )%></p>
       <br>
       <div class="box has-shadow">
           <p><%= output.post_body %></p>
@@ -50,7 +55,7 @@
       </div>
 
 
-      <p class="title m-0 p-0" style="border: 1px solid black;">Comments:</p>
+      <p class="title m-0 p-0" >Comments:</p>
       <%output.commentedby.forEach(out=> {  %>
       <section class="section is-small " style="border: 1px solid black; padding: 0;">
         <p  style=" margin: 0;"><%= out.user_commented.username %></p>
@@ -59,11 +64,11 @@
       <% }); %>
     
       <p>Add Comment:</p>
-      <form>
+      <form action="" method="post">
 <div class="field m-2">
   <label class="label">Content:</label>
   <p class="control has-icons-left has-icons-right">
-    <textarea class="is-italic" required name="post_body" rows="5" cols="50" style="margin-left: 80px;">
+    <textarea class="is-italic container" required name="post_body" rows="5" style="margin-left: 10%; min-width: 80%;min-height: 30% ; max-height:50% ; resize: none;">
 
     </textarea>
     <span class="icon is-small is-left">

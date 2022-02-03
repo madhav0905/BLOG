@@ -7,14 +7,16 @@
     <%- include("./partials/nav")%>
     <div class="container is-widescreen">
         <% if(posts.length) {%>
-        <% posts.forEach(posts => { console.log("haha "+posts) %>
+        <% posts.forEach(posts => {  %>
         <div class="notification is-warning has-shadow">
             
             <p class="title"><%= posts.posttitle%></p>
+            <p class="is-pulled-right">Likes: <%= posts.likes %></p>
             <p class="subtitle"><a href="/logged/user/<%= posts.post_create.username %>">Author : <%= posts.post_create.username %></a></p>
            <p><a class="button is-danger is-pulled-right" href="/logged/read/<%= posts._id %>">Read More</a>   </p>    
         <p><%= posts.tags %></p>
-        <br>
+        <p>Last modified at :<%= posts.date %></p>
+     
         
         </div>
         <%})%>

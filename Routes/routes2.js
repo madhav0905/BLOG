@@ -13,29 +13,40 @@ const validatelogin=require("../Schemas/validatelogin");
 const validatepost=require("../Schemas/validate_post");
 const auth=require("../middleware/auth");
 require('dotenv').config();
-route.get('/explore',auth,async(req,res)=>
+route.get('/explore',[auth,urlencoded],async(req,res)=>
 {
-
+console.log("hi");
 const id=req.decoded;
 const obj=await User.findById(id);
- try{
+console.log(obj);
+ 
+   
+    let patte=req.query.search;
+   if(typeof(patte) === 'undefined')
+        {
+            patte="";
+        }
 
-const posts=await Post.find({post_create:{$nin:[id]}}).populate("post_create","username");
-console.log(posts);
+try{
+    let posts={};
+    if(patte)
+            { posts=await Post.find({post_create:{$nin:[id]},tags:new RegExp(patte.trim(), "i")}).populate("post_create","username");
+
+ }
+ else
+ {
+     posts=await Post.find({post_create:{$nin:[id]}}).populate("post_create","username"); 
+
+ }
 
 try
 {
-    res.render("explore",{posts:posts});
+    res.render("explore",{posts:posts,pate:patte});
 }
 catch(ex)
 {
     return res.send(ex);
 }
-
-
-
-
-
 
 
  }
@@ -46,44 +57,14 @@ catch(ex)
 
 
 
-
-
-
 });
 route.get("/create",auth,(req,res)=>
 {
-    res.render("create");
+    var patte="";
+    res.render("create",{pate:patte});
 })
-route.get("/e",async (req,res)=>
-{
-  const p= await Post.findById( "61f96b486f48f87e394e43e6"    );
-  console.log(p.commentedby);
-  const a= p.likedby.push("61f7a66233ec212b68905096");
-   p.save();
-  try{
-  res.send("hi");
-  }
-  catch(ex)
-  {
-      console.log(ex);
-  }
-});
-route.get("/f",async (req,res)=>
-{
-  const p=new Comment({
-    "text":"Nice one",
-  
-    "user_commented":"61f809340e80bd2ba42f02ef" 
-  });
-  await p.save();
-  try{
-  res.send("hi");
-  }
-  catch(ex)
-  {
-      console.log(ex);
-  }
-});
+
+
 route.get("/read/:id",[auth,urlencoded],async (req,res )=>
 {
 const post_id=req.params['id'];
@@ -104,7 +85,8 @@ else
 {
     like=0;
 }
-    return res.render("showpost",{output:output,liked:like});
+var patte="";
+    return res.render("showpost",{output:output,liked:like,pate:patte});
 
 
 
@@ -169,13 +151,48 @@ catch(e)
 route.get("/user/:userid",async (req,res)=>
 
 {
-    
+    return res.send("working in progess");
 }
 
 
 );
-route.post("/create/new",[auth,urlencoded],(req,res)=>
+route.post("/create/new",[auth,urlencoded],async (req,res)=>
 {
+
+const a=validatepost(req.body);
+
+if(req.body.post_body.trim().length < 10)
+    {
+        return res.send("content should be atleast 10 characters");
+    }
+if(a.error)
+{
+    return res.send(a.error.details[0].message);
+}
+const user_id=req.decoded;
+//create a post with user_id 
+//split tags 
+const arr=req.body.tags.split(/\s+/);
+const obj=new Post({
+"posttitle":req.body.posttitle,
+"tags":arr,
+"post_body":req.body.post_body.trim(),
+"post_create":user_id
+});
+try
+{
+await obj.save();
+return res.redirect("/logged/explore");
+
+}
+catch(ex)
+{
+    return res.send("server down pls try again");
+}
+
+
+
+
 
 }
 
@@ -191,7 +208,14 @@ route.post("/create/new",[auth,urlencoded],(req,res)=>
 
 
 
+route.get("/logout",auth,(req,res)=>
 
+{
+    res.cookie("access_token", "", { expires: new Date(0),domain:'localhost', path: '/' });
+ res.redirect("/");
+
+}
+)
 
 
 
