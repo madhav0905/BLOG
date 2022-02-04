@@ -15,10 +15,9 @@ const auth=require("../middleware/auth");
 require('dotenv').config();
 route.get('/explore',[auth,urlencoded],async(req,res)=>
 {
-console.log("hi");
 const id=req.decoded;
 const obj=await User.findById(id);
-console.log(obj);
+
  
    
     let patte=req.query.search;
@@ -148,10 +147,53 @@ catch(e)
 
 )
 
-route.get("/user/:userid",async (req,res)=>
-
+route.get("/user/:userid",[auth,urlencoded],async (req,res)=>
 {
-    return res.send("working in progess");
+
+const find_user=req.params["userid"];
+let patt=req.query.search;
+if(typeof(patt) === 'undefined')
+     {
+         patt="";
+     }
+try
+{
+
+    let post={};
+  
+    
+    const userd=await User.find({username:find_user})
+                                          
+const se= userd;
+console.log("se"+se);
+if(patt)
+{ post=await Post.find({"post_create":se,tags:new RegExp(patt.trim(), "i")}).populate("post_create","username");
+
+}
+else
+{
+post=await Post.find({"post_create":se}).populate("post_create","username"); 
+
+}
+   
+
+
+return res.render("show_user",{user_de:se,posts:post,pate:patt});
+}
+catch(ex)
+{
+return res.send(ex);
+}
+
+
+
+
+
+
+
+
+
+
 }
 
 
@@ -179,12 +221,24 @@ const obj=new Post({
 "post_body":req.body.post_body.trim(),
 "post_create":user_id
 });
+
 try
 {
-await obj.save();
+    const user_obj=await User.findById(user_id);
+const resul=await obj.save();
+
+
+
+
+ user_obj.posted.push(resul._id);
+await user_obj.save();
 return res.redirect("/logged/explore");
 
 }
+
+
+
+
 catch(ex)
 {
     return res.send("server down pls try again");
