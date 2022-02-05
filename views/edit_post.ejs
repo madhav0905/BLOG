@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <%- include("./partials/heading") %>
+<body>
+    <%- include("./partials/nav")%>
+    <div class="hero">
+        <div class="columns">
+            <div class="column"> 
+                
+                <form action="/logged/edit/new" class="box" method="post">
+                    <div class="field m-2">
+                   
+                        <label class="label">Post Title:</label>
+                        <p class="control has-icons-left has-icons-right">
+                          <input class="input" type="text" placeholder="Title of Post..." name="posttitle" value="<%= out.posttitle %> " required>
+                          <span class="icon is-small is-left">
+                            <i class="fa fa-envelope"></i>
+                          </span>
+                          
+                        </p>
+                    </div>
+                    <div class="field m-2">
+                        <label class="label">Tags:</label>
+                        <p class="control has-icons-left has-icons-right">
+                            <% let ans="" %>
+                            <% out.tags.forEach(tag => {   ans+=tag; ans+=" " ;  })%>
+                          <input class="input" type="text" placeholder="write words space by space for multiple tags" name="tags" value="<%= ans %> " required>
+                          <span class="icon is-small is-left">
+                            <i class="fa fa-tags"></i>
+                          </span>
+                          
+                        </p>
+                    </div>
+                    <div class="field m-2">
+                        <label class="label">Content:</label>
+                        <p class="control has-icons-left has-icons-right">
+                                                  <textarea class="is-italic container" required name="post_body" rows="5" style="margin-left: 10%; min-width: 80%;min-height: 30% ; max-height:50% ; resize: none;" > <%= out.post_body %> 
+                          </textarea>
+                    
+                          <span class="icon is-small is-left">
+                            <i class="fa fa-pen"></i>
+                          </span>
+                          
+                        </p>
+                    </div>
+                    <input type="hidden" value="<%= out._id %>" name="pid">
+                    <div class="field has-text-centered mb-2">
+                        <button class="button is-success ">
+                       Edit
+                         </button>
+                     </div>
+       
+                    </form>
+          
+            </div>
+        </div>
+    </div>
+   
+
+
+
+
+
+
+
+
+
+
+
+    
+</div>
+<style>
+#searchandinput
+{display: none;
+}
+
+
+</style>
+</body>
+</html>

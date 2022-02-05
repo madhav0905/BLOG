@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <%- include("./partials/heading") %>
+<body>
+    <%- include("./partials/nav")%>
+    <div class="hero">
+        <div class="columns">
+            <div class="column"> 
+                
+                <form action="/logged/edit/profile" class="box" method="post">
+                    <div class="field m-2">
+                   
+                        <label class="label">Post Title:</label>
+                        <p class="control has-icons-left has-icons-right">
+                            <% var x=ob.username.trim() %>
+                          <input class="input" type="text" name="username" value="<%= x %> "  contenteditable="false" readonly required>
+                          <span class="icon is-small is-left">
+                            <i class="fa fa-envelope"></i>
+                          </span>
+                          
+                        </p>
+                    </div>
+                    <div class="field m-2">
+                        <label class="label">First Name</label>
+                        <p class="control has-icons-left has-icons-right">
+     
+                          <input class="input" type="text" placeholder="your name" name="first_name" value="<%= ob.first_name %> " contenteditable="true" required>
+                          <span class="icon is-small is-left">
+                            <i class="fa fa-user"></i>
+                          </span>
+                          
+                        </p>
+                    </div>
+                    <div class="field m-2">
+                        <label class="label">Bio</label>
+                        <p class="control has-icons-left has-icons-right">
+                                    
+                            <input class="input" type="text" placeholder="bio " name="bio" value="<%= ob.bio %> " contenteditable="true" required>
+                          <span class="icon is-small is-left">
+                            <i class="fa fa-info-circle"></i>
+                          </span>
+                          
+                        </p>
+                    </div>
+                    <input type="hidden" value="<%= ob._id %>" name="uid">
+                    <div class="field has-text-centered mb-2">
+                        <button class="button is-success ">
+                       Edit
+                         </button>
+                     </div>
+       
+                    </form>
+          
+            </div>
+        </div>
+    </div>
+   
+
+
+
+
+
+
+
+
+
+
+
+    
+</div>
+<style>
+#searchandinput
+{display: none;
+}
+
+
+</style>
+</body>
+</html>
