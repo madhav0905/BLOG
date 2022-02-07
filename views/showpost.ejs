@@ -64,11 +64,12 @@
       <% }); %>
     
       <p>Add Comment:</p>
-      <form action="" method="post">
+      <form action="/logged/added/commented" method="post">
+        <input type="hidden" value="<%= output._id %>" name="post_id">
 <div class="field m-2">
   <label class="label">Content:</label>
   <p class="control has-icons-left has-icons-right">
-    <textarea class="is-italic container" required name="post_body" rows="5" style="margin-left: 10%; min-width: 80%;min-height: 30% ; max-height:50% ; resize: none;">
+    <textarea class="is-italic container" required name="comment_body" rows="5" minlength="5" maxlength="30" placeholder="min 5 max 30" style="margin-left: 10%; min-width: 80%;min-height: 30% ; max-height:50% ; resize: none;">
 
     </textarea>
     <span class="icon is-small is-left">

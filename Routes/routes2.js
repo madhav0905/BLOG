@@ -16,6 +16,7 @@ const validateedit=require("../Schemas/validate_edit");
 const validateedituser=require("../Schemas/validate_edit_user");
 const auth=require("../middleware/auth");
 const { url } = require('inspector');
+const { appendFile } = require('fs');
 require('dotenv').config();
 route.get('/explore',[auth,urlencoded],async(req,res)=>
 {
@@ -93,25 +94,35 @@ const output=await Post.findById(post_id)
                                     .populate({path:"commentedby",populate:{path:"user_commented"}});
                                     try
                                     {
+                                       const u=await User.findById(user_id); 
                                       if(x)
                                       {
                                           output.likedby.push(user_id);
                                           output.likes++;
+                                          u.liked.push(post_id);
+                                          await u.save();
                                           await output.save();
                                       }
                                       else
                                       {
                                         const i=output.likedby.indexOf(user_id);
+                                        const j=u.liked.indexOf(post_id);
                                         if(i>-1)
-                                            output.likedby.splice(i,1);
+                                         {   output.likedby.splice(i,1);
                                             output.likes--;
-                                       await  output.save();
+                                       if(j>-1)
+                                       {u.liked.splice(j,1);
+                                        await u.save();
+                                       }
+                                            
+                                            await  output.save();
                                       }
+                                    }
     return res.redirect("/logged/read/"+post_id);
 }
-catch(e)
+catch(err)
 {
-    return res.send("exc");
+    return res.send(e);
 }
 }
 )
@@ -220,6 +231,7 @@ route.get("/edit/:id",[auth,urlencoded],async (req,res)=>
     const output=await Post.findById(post_id)
                                         .populate("post_create")
                                         .populate({path:"commentedby",populate:{path:"user_commented"}});
+            console.log("edited is "+output);
                                       try
                                       {var p="";
                                             return res.render("edit_post",{out:output,pate:p});
@@ -301,4 +313,106 @@ return res.redirect("/logged/your_profile");
         return res.send(er);
     }
 });
+route.get("/you/liked",[auth,urlencoded],async (req,res) =>
+{
+const user_id=req.decoded;
+try{
+    const result=await User.findById(user_id)
+                                             .populate({path:"liked",populate:{path:"post_create"}});
+    console.log("hahaaha"+result.liked);
+    var p="";
+    return res.render("uliked",{posts:result.liked,pate:p});
+
+}
+catch(ex)
+{console.log("went here");
+    return res.send(ex);
+}
+}
+
+)
+route.get("/delete/:id",[auth,urlencoded],async (req,res)=>
+{
+const user_post_id=req.params["id"];
+
+const remain=await Post.findById(user_post_id)
+                                                .populate("post_create")
+                                                .populate("likedby").populate("commentedby");
+try
+{
+const user_who_created=remain.post_create;
+const user_obj=await User.findById(user_who_created);
+console.log(remain.likedby)
+const i=user_obj.posted.indexOf(user_post_id);
+let p=0;
+
+
+
+if(i>-1)
+{
+user_obj.posted.splice(i,1);
+await user_obj.save();
+}
+for(p=0;p<remain.likedby.length;p++)
+{
+    const liked_user_id=remain.likedby[p]._id;
+    const r=await User.findById(liked_user_id);
+    const j=r.liked.indexOf(user_post_id);
+    if(j>-1)
+    {
+        r.liked.splice(j,1);
+        r.save();
+    }
+  
+
+}
+
+let l=0;
+for(l=0;l<remain.commentedby.length;l++)
+{
+
+
+    const commented_id=remain.commentedby[i]._id;
+    await Comment.deleteOne({_id:commented_id}).then(()=>console.log("deleted")).catch((ex)=>console.log(ex));
+
+
+}
+console.log(user_who_created)
+Post.deleteOne({_id:user_post_id}).then(()=> console.log("successfuly deleted")).catch((ex)=>console.log(ex));
+return res.redirect("/logged/yourposts");
+}
+catch(ex)
+{
+    return res.send(ex);
+}
+}
+);
+route.post("/added/commented",[auth,urlencoded],async (req,res)=>
+{
+    const comment_body=req.body.comment_body.trim();
+    const pid=req.body.post_id;
+    console.log("pid "+pid);
+    if(comment_body.length<5)
+    {
+        return res.send("comment atleast 5 characters");
+    }
+    const user_id=req.decoded;
+try
+{
+    const commen=new Comment({"text":comment_body,user_commented:user_id});
+    commen.save();
+       
+
+ const c=commen._id;
+ const pobj=await Post.findById(pid);
+        pobj.commentedby.push(c);
+        pobj.save();
+    return res.redirect("/logged/read/"+pid);
+}
+catch(ex)
+{
+    return res.send(ex);
+}
+}
+)
 module.exports=route;
