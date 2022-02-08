@@ -1,6 +1,6 @@
 <nav class="navbar is-transparent has-shadow is-black is-italic ">
     <div class="navbar-brand ">
-      <a class="navbar-item mt-0 mb-0" href="https://bulma.io">
+      <a class="navbar-item mt-0 mb-0" href="#">
        <p class="subtitle has-text-warning">L&amp;S</p>
       </a>
       <div class="navbar-burger" data-target="navbarExampleTransparentExample">
@@ -49,7 +49,7 @@
        
                 <div class="control has-icons-left">
                   <form action="#" method="get">
-                    <% console.log(pate) %>
+                
                     <% if(pate) { %>
                   
                   <input class="input " type="search" name="search" value="<%= pate %>" placeholder="Find posts by tags">
@@ -114,6 +114,14 @@ $el.addEventListener('click', function () {
 });
 }
 
+});
+window.addEventListener( "pageshow", function ( event ) {
+  var historyTraversal = event.persisted || ( typeof window.performance != "undefined" && window.performance.navigation.type === 2 );
+  if ( historyTraversal ) {
+    // Handle page restore.
+    //alert('refresh');
+    window.location.reload();
+  }
 });
 </script>
 </html>

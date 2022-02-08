@@ -55,18 +55,19 @@
       </div>
 
 
-      <p class="title m-0 p-0" >Comments:</p>
+      <p class="title" style="margin-bottom: 0.5%; padding:0%;">Comments:</p>
+<section class="box">
       <%output.commentedby.forEach(out=> {  %>
-      <section class="section is-small " style="border: 1px solid black; padding: 0;">
-        <p  style=" margin: 0;"><%= out.user_commented.username %></p>
-      <p ><%= out.text %></p>
-    </section>
+      
+        <p class="is-centered" style=" margin-bottom: 0.5%;"><a style="text-decoration: none;" href="/logged/user/<%= out.user_commented.username %>"><%= out.user_commented.username %></a>
+     : <%= out.text %></p>
+  
       <% }); %>
-    
-      <p>Add Comment:</p>
+    </section>
       <form action="/logged/added/commented" method="post">
+        <h4 class="title is-4">Add Comment:</h4>
         <input type="hidden" value="<%= output._id %>" name="post_id">
-<div class="field m-2">
+<div class="field ">
   <label class="label">Content:</label>
   <p class="control has-icons-left has-icons-right">
     <textarea class="is-italic container" required name="comment_body" rows="5" minlength="5" maxlength="30" placeholder="min 5 max 30" style="margin-left: 10%; min-width: 80%;min-height: 30% ; max-height:50% ; resize: none;">
@@ -93,7 +94,7 @@
 
 <script>
   function myFunction(id) {
-    console.log(id);
+
   var element = document.getElementById(id);
 
 

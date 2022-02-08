@@ -14,6 +14,7 @@ const validatelogin=require("../Schemas/validatelogin");
 const validatepost=require("../Schemas/validate_post");
 const validateedit=require("../Schemas/validate_edit");
 const validateedituser=require("../Schemas/validate_edit_user");
+const validate_password=require("../Schemas/validate_password");
 const auth=require("../middleware/auth");
 const { url } = require('inspector');
 const { appendFile } = require('fs');
@@ -139,7 +140,7 @@ try
     let post={};
     const userd=await User.find({username:find_user})
 const se= userd;
-console.log("se"+se);
+
 if(patt)
 { post=await Post.find({"post_create":se,tags:new RegExp(patt.trim(), "i")}).populate("post_create","username");
 }
@@ -231,7 +232,7 @@ route.get("/edit/:id",[auth,urlencoded],async (req,res)=>
     const output=await Post.findById(post_id)
                                         .populate("post_create")
                                         .populate({path:"commentedby",populate:{path:"user_commented"}});
-            console.log("edited is "+output);
+        
                                       try
                                       {var p="";
                                             return res.render("edit_post",{out:output,pate:p});
@@ -294,10 +295,10 @@ catch(er)
 route.post("/edit/profile",[auth,urlencoded],async (req,res)=>
 {
     req.body.username.trim();
-    console.log(req.body);
+  
     const check=validateedituser(req.body);
     if(check.error)
-    {console.log(check.error)
+    {
     return res.send(check.error.details[0].message);
     }
     const em=_.pick(req.body,["username"]);
@@ -305,7 +306,7 @@ route.post("/edit/profile",[auth,urlencoded],async (req,res)=>
     const us=await User.findByIdAndUpdate(req.body.uid,user,{ returnOriginal: false});
     try
     {
-console.log(us);
+
 return res.redirect("/logged/your_profile");
     } 
     catch(er)
@@ -319,13 +320,13 @@ const user_id=req.decoded;
 try{
     const result=await User.findById(user_id)
                                              .populate({path:"liked",populate:{path:"post_create"}});
-    console.log("hahaaha"+result.liked);
+
     var p="";
     return res.render("uliked",{posts:result.liked,pate:p});
 
 }
 catch(ex)
-{console.log("went here");
+{
     return res.send(ex);
 }
 }
@@ -342,7 +343,7 @@ try
 {
 const user_who_created=remain.post_create;
 const user_obj=await User.findById(user_who_created);
-console.log(remain.likedby)
+
 const i=user_obj.posted.indexOf(user_post_id);
 let p=0;
 
@@ -377,7 +378,7 @@ for(l=0;l<remain.commentedby.length;l++)
 
 
 }
-console.log(user_who_created)
+
 Post.deleteOne({_id:user_post_id}).then(()=> console.log("successfuly deleted")).catch((ex)=>console.log(ex));
 return res.redirect("/logged/yourposts");
 }
@@ -391,7 +392,7 @@ route.post("/added/commented",[auth,urlencoded],async (req,res)=>
 {
     const comment_body=req.body.comment_body.trim();
     const pid=req.body.post_id;
-    console.log("pid "+pid);
+ 
     if(comment_body.length<5)
     {
         return res.send("comment atleast 5 characters");
@@ -415,4 +416,62 @@ catch(ex)
 }
 }
 )
+route.get("/editpassword",[auth,urlencoded],async (req,res)=>
+{
+return res.render("edit_password",{pate:""});
+}
+)
+route.post("/edit/password",[auth,urlencoded],async (req,res) =>
+{
+    req.body.curr_password.trim();
+    req.body.new_password.trim();
+    req.body.retype_new_password.trim();
+    const check=validate_password(req.body);
+   
+    if(check.error)
+    {
+    return res.send(check.error.details[0].message);
+    }
+const user_d=req.decoded;
+
+    const result=await User.findById(user_d);
+  
+   const resul=await  bcrypt.compare(req.body.curr_password, result.password);
+        
+        try{
+            if(!resul)
+            return res.status(400).send('wrong password');
+
+        if(req.body.new_password === req.body.retype_new_password)
+        {
+            const salt=await bcrypt.genSalt(10);
+const hashed= await bcrypt.hash(req.body.new_password,salt);
+try{
+    result.password=hashed;
+    await result.save();
+ return res.redirect("/logged/logout");
+    }
+    catch(err)
+      {
+ return  res.send(err.message);
+     }
+
+        }
+        else
+        {
+            return res.send("passwords retype error");
+        }
+
+
+
+
+        }
+        
+        catch(err){
+                    return res.status(400).send("dssd");
+               
+        }
+    });
+
+
 module.exports=route;

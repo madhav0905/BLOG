@@ -27,7 +27,7 @@ route.post("/store",urlencoded,async (req,res)=>
 {
 const check=validate(req.body);
 if(check.error)
-{console.log(check.error)
+{
 return res.send(check.error.details[0].message);
 }
 const em=_.pick(req.body,["username"]);
@@ -58,7 +58,7 @@ res.send(err.message);
 const ob=new User(user);
 await ob.save()
         .then(()=>res.redirect('/')        )
-        .catch((err)=>{console.log(err);res.send("technical error")})
+        .catch((err)=>{console.log(err);return res.send("technical error")})
 
 
 
@@ -69,7 +69,7 @@ route.post("/logg",urlencoded,async (req,res)=>
 {
     const check=validatelogin(req.body);
 if(check.error)
-{console.log(check.error)
+{
 return res.send(check.error.details[0].message);
 }
 const pass=req.body.password;
